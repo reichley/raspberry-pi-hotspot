@@ -64,7 +64,7 @@ sudo iptables -A FORWARD -i wlan0 -o ethX -j ACCEPT
 
 ## commands to install iptables-persistent (select 'yes' to both ipv4 and ipv6 'save current rules' dialogs)
 ```
-sudo apt install iptables-persistent
+sudo apt install iptables-persistent -y
 ```
 
 ## commands to restart (check for errors)
