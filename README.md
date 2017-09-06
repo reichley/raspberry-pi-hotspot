@@ -27,7 +27,7 @@ driver=nl80211
 # the 'ssid' will indeed be your hotspot ssid
 ssid=pipi
 hw_mode=g
-channel=7
+channel=1
 wmm_enabled=0
 macaddr_acl=0
 auth_algs=1
@@ -37,6 +37,12 @@ wpa=2
 wpa_passphrase=314314314
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
+```
+
+## edits to /etc/default/hostapd
+```
+# uncomment following line and add file location between ""
+DAEMON_CONF="/etc/hostapd/hostapd.conf"
 ```
 
 ## edits to /etc/sysctl.conf (simple, remove the '#' from the front of the following line)
