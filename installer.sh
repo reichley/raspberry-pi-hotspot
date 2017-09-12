@@ -22,9 +22,10 @@ HOTSSID="$1"
 HOTPASS="$2"
 
 apt-get remove --purge hostapd -yqq
+apt-get remove --purge iptables-persistent -yqq
 apt-get update -yqq
 apt-get upgrade -yqq
-apt-get install hostapd dnsmasq -yqq
+apt-get install hostapd dnsmasq dialog -yqq
 
 echo "which interface do you wish to turn into a hotspot?"
 ls /sys/class/net | grep wlan
@@ -78,7 +79,7 @@ sed -i -- 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 
 
 #edits to /etc/rc.local (to disable power mgmt on the wifi interface, add before the 'exit 0' line)
-sed -i -- '$isudo iw dev $HOTFACE set power_save off' /etc/rc.local
+#sed -i -- "$i sudo iw dev $HOTFACE set power_save off" /etc/rc.local
 
 #commands to add iptables rules (remember to change 'ethX' and 'wlan0' to the interfaces on your pi...easiest way to find them is the iwconfig command)
 
@@ -87,7 +88,7 @@ iptables -A FORWARD -i $HOTNET -o $HOTFACE -m state --state RELATED,ESTABLISHED 
 iptables -A FORWARD -i $HOTFACE -o $HOTNET -j ACCEPT
 
 #commands to install iptables-persistent (select 'yes' to both ipv4 and ipv6 'save current rules' dialogs)
-apt install iptables-persistent -yqq
+DEBIAN_FRONTEND=noninteractive apt-get install -yqq iptables-persistent
 
 systemctl enable hostapd
 systemctl enable dnsmasq
