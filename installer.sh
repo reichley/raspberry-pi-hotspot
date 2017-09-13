@@ -9,17 +9,23 @@ if [ "$EUID" -ne 0 ];
       exit
 fi
 
-if [[ $# -lt 2 ]];
-      then echo "You need to pass both an ssid and password for your hotspot."
-      echo ""
-      echo "Usage:"
-      echo "sudo $0 yourssid yourpassword"
-      echo ""
-      exit
-fi
+#if [[ $# -lt 2 ]];
+      #then echo "You need to pass both an ssid and password for your hotspot."
+      #echo ""
+      #echo "Usage:"
+      #echo "sudo $0 yourssid yourpassword"
+      #echo ""
+      #exit
+#fi
 
-HOTSSID="$1"
-HOTPASS="$2"
+echo "please enter an ssid for your hotspot"
+read HOTSSID
+
+echo "please enter a password for your hotspot"
+read HOTPASS
+
+#HOTSSID="$1"
+#HOTPASS="$2"
 
 apt-get remove --purge hostapd -yqq
 apt-get remove --purge iptables-persistent -yqq
@@ -28,7 +34,7 @@ apt-get upgrade -yqq
 apt-get install hostapd dnsmasq dialog -yqq
 
 echo "which interface do you wish to turn into a hotspot?"
-ls /sys/class/net | grep wlan
+ls /sys/class/net
 read HOTFACE
 
 echo "which interface do you wish to route the traffic out of? (internet connected)"
