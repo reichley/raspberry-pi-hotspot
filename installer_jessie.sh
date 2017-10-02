@@ -1,7 +1,7 @@
 #!/bin/bash
 #raspberry-pi-hotspot
 
-#The following list of commands and files to edit enable a raspberry pi 3 (running raspbian stretch) to perform hotspot duties while #forwarding client traffic through the ethernet port and out to the interwebs.
+#The following list of commands and files to edit enable a raspberry pi 3 (running raspbian jessie) to perform hotspot duties while #forwarding client traffic through the ethernet port and out to the interwebs.
 #commands to install the software (saving iptables-persistent until we've added some iptables rules)
 
 if [ "$EUID" -ne 0 ];
@@ -10,15 +10,12 @@ if [ "$EUID" -ne 0 ];
 fi
 
 echo "please enter an ssid for your hotspot"
-echo ""
 read HOTSSID
 
 echo "please enter a password for your hotspot"
-echo ""
 read HOTPASS
 
 echo "removing hostapd/iptables-persistent if installed..."
-echo ""
 apt-get remove --purge hostapd -yq
 apt-get remove --purge iptables-persistent -yq
 apt-get update -yq
