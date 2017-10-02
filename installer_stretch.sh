@@ -16,11 +16,11 @@ echo "please enter a password for your hotspot"
 read HOTPASS
 
 echo "removing hostapd/iptables-persistent if installed..."
-apt-get remove --purge hostapd -yqq
-apt-get remove --purge iptables-persistent -yqq
-apt-get update -yqq
-apt-get upgrade -yqq
-apt-get install hostapd dnsmasq dialog -yqq
+apt-get remove --purge hostapd -yq
+apt-get remove --purge iptables-persistent -yq
+apt-get update -yq
+apt-get upgrade -yq
+apt-get install hostapd dnsmasq dialog -yq
 
 for i in $(ls /sys/class/net); do
   if ping -c 1 -I $i 208.67.222.222 &> /dev/null
