@@ -39,7 +39,7 @@ echo "which interface do you wish to turn into a hotspot?"
 ls /sys/class/net
 read HOTFACE
 
-cat < EOF > /etc/network/interfaces
+cat << EOF > /etc/network/interfaces
 source-directory /etc/network/interfaces.d
 
 auto lo
