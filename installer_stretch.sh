@@ -9,37 +9,35 @@ if [ "$EUID" -ne 0 ];
       exit
 fi
 
-#if [[ $# -lt 2 ]];
-      #then echo "You need to pass both an ssid and password for your hotspot."
-      #echo ""
-      #echo "Usage:"
-      #echo "sudo $0 yourssid yourpassword"
-      #echo ""
-      #exit
-#fi
-
 echo "please enter an ssid for your hotspot"
 read HOTSSID
 
 echo "please enter a password for your hotspot"
 read HOTPASS
 
-#HOTSSID="$1"
-#HOTPASS="$2"
-
+echo "removing hostapd/iptables-persistent if installed..."
 apt-get remove --purge hostapd -yqq
 apt-get remove --purge iptables-persistent -yqq
 apt-get update -yqq
 apt-get upgrade -yqq
 apt-get install hostapd dnsmasq dialog -yqq
 
-echo "which interface do you wish to turn into a hotspot?"
-ls /sys/class/net
-read HOTFACE
+for i in $(ls /sys/class/net); do
+  if ping -c 1 -I $i 208.67.222.222 &> /dev/null
+  then
+    echo "$i is connected to the internet"
+  else
+    :
+  fi
+done
 
 echo "which interface do you wish to route the traffic out of? (internet connected)"
 ls /sys/class/net
 read HOTNET
+
+echo "which interface do you wish to turn into a hotspot?"
+ls /sys/class/net
+read HOTFACE
 
 #edits to /etc/dhcpcd.conf
 cat << EOF >> /etc/dhcpcd.conf
@@ -63,17 +61,16 @@ interface=$HOTFACE
 #driver=nl80211
 ssid=$HOTSSID
 hw_mode=g
-channel=1
-wmm_enabled=0
+channel=3
+ieee80211n=1
+wmm_enabled=1
 macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
 wpa_passphrase=$HOTPASS
 wpa_key_mgmt=WPA-PSK
-wpa_pairwise=CCMP
 rsn_pairwise=CCMP
-wmm_enabled=1
 ht_capab=[HT40][SHORT-GI-20][DSSS_CCK-40]
 EOF
 
