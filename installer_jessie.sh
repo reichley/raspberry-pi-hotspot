@@ -20,7 +20,7 @@ apt-get remove --purge hostapd -yq
 apt-get remove --purge iptables-persistent -yq
 apt-get update -yq
 apt-get upgrade -yq
-apt-get install hostapd dnsmasq dialog -yq
+apt-get install hostapd dnsmasq -yq
 
 for i in $(ls /sys/class/net); do
   if ping -c 1 -I $i 208.67.222.222 &> /dev/null
@@ -106,7 +106,7 @@ sed -i -- 's/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/g' /etc/
 sed -i -- 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 
 #edits to /etc/rc.local (to disable power mgmt on the wifi interface, add before the 'exit 0' line)
-sed -i -- '$isudo iw dev $HOTFACE set power_save off' /etc/rc.local
+#sed -i -- '$isudo iw dev $HOTFACE set power_save off' /etc/rc.local
 
 #commands to add iptables rules (remember to change 'ethX' and 'wlan0' to the interfaces on your pi...easiest way to find them is the iwconfig command)
 
