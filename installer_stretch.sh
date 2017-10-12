@@ -82,7 +82,7 @@ sed -i -- 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 
 
 #edits to /etc/rc.local (to disable power mgmt on the wifi interface, add before the 'exit 0' line)
-sed -i -- '$isudo iw dev "$HOTFACE" set power_save off' /etc/rc.local
+#sed -i -- '$isudo iw dev "$HOTFACE" set power_save off' /etc/rc.local
 
 #commands to add iptables rules (remember to change 'ethX' and 'wlan0' to the interfaces on your pi...easiest way to find them is the iwconfig command)
 
