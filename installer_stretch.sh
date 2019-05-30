@@ -9,12 +9,15 @@ if [ "$EUID" -ne 0 ];
       exit
 fi
 
+echo ""
 echo "please enter an ssid for your hotspot"
 read HOTSSID
 
+echo ""
 echo "please enter a password for your hotspot"
 read HOTPASS
 
+echo ""
 echo "removing hostapd/iptables-persistent if installed..."
 apt-get remove --purge hostapd -yq
 apt-get remove --purge iptables-persistent -yq
@@ -25,21 +28,26 @@ apt-get install hostapd dnsmasq dialog -yq
 for i in $(ls /sys/class/net); do
   if ping -c 1 -I $i 208.67.222.222 &> /dev/null
   then
+    echo ""
     echo "$i is connected to the internet"
   else
     :
   fi
 done
 
+echo ""
 echo "which interface do you wish to route the traffic out of? (internet connected)"
 ls /sys/class/net
 read HOTNET
 
+echo ""
 echo "which interface do you wish to turn into a hotspot?"
 ls /sys/class/net
 read HOTFACE
 
 #edits to /etc/dhcpcd.conf
+echo ""
+echo "assigning 10.1.1.1/24 as wifi ap ip/gateway..."
 cat << EOF >> /etc/dhcpcd.conf
 interface $HOTFACE
 static ip_address=10.1.1.1/24
@@ -48,6 +56,8 @@ static domain_name_servers=10.1.1.1,208.67.222.222 #opendns server
 EOF
 
 #edits to /etc/dnsmasq.conf
+echo ""
+echo "clients will be .2 through .222"
 cat << EOF >> /etc/dnsmasq.conf
 interface=$HOTFACE
 domain-needed
@@ -56,6 +66,8 @@ dhcp-range=10.1.1.2,10.1.1.222,24h
 EOF
 
 #edits to /etc/hostapd/hostapd.conf (will be a new file)
+echo ""
+echo "just a reminder, the ap ssid is $HOTSSID and pw is $HOTPASS"
 cat << EOF >> /etc/hostapd/hostapd.conf
 interface=$HOTFACE
 #driver=nl80211
@@ -93,6 +105,7 @@ iptables -A FORWARD -i $HOTFACE -o $HOTNET -j ACCEPT
 #commands to install iptables-persistent (select 'yes' to both ipv4 and ipv6 'save current rules' dialogs)
 DEBIAN_FRONTEND=noninteractive apt-get install -yqq iptables-persistent
 
+systemctl unmask hostapd
 systemctl enable hostapd
 systemctl enable dnsmasq
 
